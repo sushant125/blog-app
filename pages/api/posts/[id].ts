@@ -7,9 +7,14 @@ type ErrorResponse = {
   details?: string;
 };
 
+type SuccessResponse = {
+  message?: string;
+  [key: string]: any;
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ErrorResponse>
+  res: NextApiResponse<ErrorResponse | SuccessResponse>
 ) {
   try {
     await connectDB();

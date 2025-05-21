@@ -7,9 +7,14 @@ type ErrorResponse = {
   details?: string;
 };
 
+type SuccessResponse = {
+  message?: string;
+  [key: string]: any;
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ErrorResponse>
+  res: NextApiResponse<ErrorResponse | SuccessResponse>
 ) {
   try {
     await connectDB();
@@ -17,12 +22,12 @@ export default async function handler(
     switch (req.method) {
       case 'GET':
         try {
-          const posts = await Post.find({}).sort({ createdAt: -1 });
+          const posts = await Post.find().sort({ createdAt: -1 });
           res.status(200).json(posts);
         } catch (error) {
           console.error('Error fetching posts:', error);
           res.status(500).json({ 
-            error: 'Error fetching posts', 
+            error: 'Error fetching posts',
             details: error instanceof Error ? error.message : 'Unknown error'
           });
         }

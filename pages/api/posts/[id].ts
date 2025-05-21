@@ -2,9 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import connectDB from '../../../lib/mongodb';
 import Post from '../../../models/Post';
 
+type ErrorResponse = {
+  error: string;
+  details?: string;
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ErrorResponse>
 ) {
   try {
     await connectDB();
@@ -26,7 +31,7 @@ export default async function handler(
           console.error('Error fetching post:', error);
           res.status(500).json({ 
             error: 'Error fetching post',
-            details: error.message
+            details: error instanceof Error ? error.message : 'Unknown error'
           });
         }
         break;
@@ -62,7 +67,7 @@ export default async function handler(
           console.error('Error updating post:', error);
           res.status(400).json({ 
             error: 'Error updating post',
-            details: error.message
+            details: error instanceof Error ? error.message : 'Unknown error'
           });
         }
         break;
@@ -78,7 +83,7 @@ export default async function handler(
           console.error('Error deleting post:', error);
           res.status(400).json({ 
             error: 'Error deleting post',
-            details: error.message
+            details: error instanceof Error ? error.message : 'Unknown error'
           });
         }
         break;
@@ -91,7 +96,7 @@ export default async function handler(
     console.error('Database connection error:', error);
     res.status(500).json({ 
       error: 'Database connection error',
-      details: error.message
+      details: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 } 

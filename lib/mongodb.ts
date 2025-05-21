@@ -38,7 +38,7 @@ async function connectDB() {
         console.log('MongoDB connected successfully');
         return mongoose;
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.error('MongoDB connection error:', error);
         throw error;
       });
@@ -46,7 +46,7 @@ async function connectDB() {
 
   try {
     cached.conn = await cached.promise;
-  } catch (e) {
+  } catch (e: unknown) {
     cached.promise = null;
     console.error('Failed to connect to MongoDB:', e);
     throw e;
